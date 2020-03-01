@@ -6,10 +6,11 @@ const router = require('express').Router()
 router.post('/', (req, res) => {
 	Messages.create(req.body)
 		.then(message => {
-			res.send(message)
+			res.send({ date: message.date })
 		})
 		.catch(err => res.send(err))
 })
+
 router.get('/', (req, res) => {
 	Messages.find(req.query)
 		.then(messages => {
