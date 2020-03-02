@@ -13,6 +13,7 @@ router.post('/', (req, res) => {
 
 router.get('/', (req, res) => {
 	Messages.find(req.query)
+		.populate('user')
 		.then(messages => {
 			res.send(messages)
 		})
