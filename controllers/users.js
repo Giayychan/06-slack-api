@@ -3,6 +3,7 @@ const Users = require('../models/users')
 const router = require('express').Router()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 // Routes
 router.post('/signup', (req, res) => {
@@ -37,16 +38,35 @@ router.post('/login', (req, res) => {
 					let token = jwt.sign(user.toObject(), process.env.SECRET)
 					res.send(token)
 				} else {
-					res.send({ message: 'email not found or incorrect password' })
+					res.send({ error: 'email not found or incorrect password' })
 				}
 			} else {
-				res.send({ message: 'email not found' })
+				res.send({ error: 'email not found' })
 			}
 		})
 		.catch(err => {
 			res.send(err)
 		})
 })
+
+// router.post('/login', (req, res) => {
+// 	Users.findOne({ email: req.body.email }).then(user => {
+// 		if (user) {
+// let match = bcrypt.compareSync(req.body.password, user.password)
+// if (match) {
+// 	console.log('match', match)
+// }
+// 	} else {
+// 		res.send({ error: 'email not found' })
+// 	}
+// })
+// 	if (user) {
+// 	// let match = bcrypt.compareSync(req.body.password, user.password)
+// 	console.log("found",user)
+// }).catch(err=>{
+// 	console.log(err)
+// 	// })
+// })
 
 // Export
 module.exports = router

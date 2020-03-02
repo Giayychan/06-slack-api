@@ -12,6 +12,7 @@ const app = express()
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(cors({ credentials: true }))
 
 // Routes
 app.use('/channels', require('./controllers/channels'))
@@ -22,7 +23,7 @@ app.use('/messages', require('./controllers/messages'))
 app.listen(process.env.PORT, err => {
 	err
 		? () => {
-				throw err
+			throw err
 		  }
 		: console.log(`Ready on port ${process.env.PORT}`)
 })
