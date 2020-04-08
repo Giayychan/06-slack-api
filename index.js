@@ -20,10 +20,10 @@ app.use('/users', require('./controllers/users'))
 app.use('/messages', require('./controllers/messages'))
 
 // Server
-app.listen(process.env.PORT, err => {
+app.listen(process.env.PORT, (err) => {
 	err
 		? () => {
-			throw err
+				throw err
 		  }
 		: console.log(`Ready on port ${process.env.PORT}`)
 })

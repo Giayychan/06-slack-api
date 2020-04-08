@@ -8,30 +8,30 @@ require('dotenv').config()
 // Routes
 router.post('/signup', (req, res) => {
 	Users.findOne({ email: req.body.email })
-		.then(user => {
+		.then((user) => {
 			if (user) {
-				res.send({ message: 'Email already exists' })
+				res.send({ error: 'Email already exists' })
 			} else {
 				let encrypted = bcrypt.hashSync(req.body.password, 10)
 				req.body.password = encrypted
 				Users.create(req.body)
-					.then(data => {
+					.then((data) => {
 						let token = jwt.sign(data.toObject(), process.env.SECRET)
 						res.send(token)
 					})
-					.catch(err => {
+					.catch((err) => {
 						res.send(err)
 					})
 			}
 		})
-		.catch(err => {
+		.catch((err) => {
 			res.send(err)
 		})
 })
 
 router.post('/login', (req, res) => {
 	Users.findOne({ email: req.body.email })
-		.then(user => {
+		.then((user) => {
 			if (user) {
 				let match = bcrypt.compareSync(req.body.password, user.password)
 				if (match) {
@@ -44,29 +44,10 @@ router.post('/login', (req, res) => {
 				res.send({ error: 'email not found' })
 			}
 		})
-		.catch(err => {
+		.catch((err) => {
 			res.send(err)
 		})
 })
-
-// router.post('/login', (req, res) => {
-// 	Users.findOne({ email: req.body.email }).then(user => {
-// 		if (user) {
-// let match = bcrypt.compareSync(req.body.password, user.password)
-// if (match) {
-// 	console.log('match', match)
-// }
-// 	} else {
-// 		res.send({ error: 'email not found' })
-// 	}
-// })
-// 	if (user) {
-// 	// let match = bcrypt.compareSync(req.body.password, user.password)
-// 	console.log("found",user)
-// }).catch(err=>{
-// 	console.log(err)
-// 	// })
-// })
 
 // Export
 module.exports = router
