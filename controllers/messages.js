@@ -22,7 +22,7 @@ router.post('/', upload.single('file'), (req, res) => {
 				req.file.buffer
 			).content
 			cloudinary.uploader.upload(uri).then((result, err) => {
-				req.body.file = result.url
+				req.body.file = result.secure_url
 				Messages.create(req.body)
 					.then((message) => {
 						res.send(message)
@@ -46,7 +46,10 @@ router.get('/', (req, res) => {
 	let data = jwt.verify(token, process.env.SECRET)
 	if (data) {
 		Messages.find(req.query)
-			.populate('user')
+			.populate({
+				path: 'users',
+				select: 'name',
+			})
 			.then((messages) => {
 				res.send(messages)
 			})
