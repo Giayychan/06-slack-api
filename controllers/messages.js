@@ -46,10 +46,7 @@ router.get('/', (req, res) => {
 	let data = jwt.verify(token, process.env.SECRET)
 	if (data) {
 		Messages.find(req.query)
-			.populate({
-				path: 'users',
-				select: 'name',
-			})
+			.populate('user')
 			.then((messages) => {
 				res.send(messages)
 			})
