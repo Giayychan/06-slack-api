@@ -24,6 +24,7 @@ router.post('/', upload.single('file'), (req, res) => {
 			cloudinary.uploader.upload(uri).then((result, err) => {
 				req.body.file = result.url
 				Messages.create(req.body)
+					.populate('user')
 					.then((message) => {
 						res.send(message)
 					})
