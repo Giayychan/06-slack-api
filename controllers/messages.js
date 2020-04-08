@@ -16,19 +16,26 @@ router.post('/', upload.single('file'), (req, res) => {
 	let data = jwt.verify(token, process.env.SECRET)
 	if (data) {
 		req.body.user = data._id
-		let uri = dataUri.format(
-			path.extname(req.file.originalname).toString(),
-			req.file.buffer
-		).content
-		cloudinary.uploader.upload(uri).then((result, err) => {
-			console.log(result, err)
-			req.body.file = result.url
+		if (req.file) {
+			let uri = dataUri.format(
+				path.extname(req.file.originalname).toString(),
+				req.file.buffer
+			).content
+			cloudinary.uploader.upload(uri).then((result, err) => {
+				req.body.file = result.url
+				Messages.create(req.body)
+					.then((message) => {
+						res.send(message)
+					})
+					.catch((err) => res.send(err))
+			})
+		} else {
 			Messages.create(req.body)
 				.then((message) => {
 					res.send(message)
 				})
 				.catch((err) => res.send(err))
-		})
+		}
 	} else {
 		res.send({ error: 'not authorized' })
 	}
